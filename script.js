@@ -268,13 +268,13 @@ class ReefManager {
             this.fishCircleAnimationId = null;
         }
 
-        const fishElements = document.querySelectorAll('#reef-area .reef-creature[data-creature="🐠"]');
-        fishElements.forEach(fishEl => {
-            fishEl.classList.remove('fish-circling');
-            fishEl.style.left = '';
-            fishEl.style.top = '';
-            fishEl.style.transform = '';
-            fishEl.style.animationDelay = '';
+        const creatureElements = document.querySelectorAll('#reef-area .reef-creature');
+        creatureElements.forEach(creatureEl => {
+            creatureEl.classList.remove('fish-circling');
+            creatureEl.style.left = '';
+            creatureEl.style.top = '';
+            creatureEl.style.transform = '';
+            creatureEl.style.animationDelay = '';
         });
 
         this.fishOrbitData.clear();
@@ -286,7 +286,7 @@ class ReefManager {
         }
 
         const reefArea = document.getElementById('reef-area');
-        const fishElements = Array.from(reefArea.querySelectorAll('.reef-creature[data-creature="🐠"]'));
+        const fishElements = Array.from(reefArea.querySelectorAll('.reef-creature'));
 
         if (!this.fishCircleStartTime) {
             this.fishCircleStartTime = timestamp;
