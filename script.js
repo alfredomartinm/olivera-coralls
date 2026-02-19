@@ -38,9 +38,9 @@ class ReefManager {
             });
         });
 
-        // Refresh button
+        // Clear reef button
         document.getElementById('refresh-btn').addEventListener('click', () => {
-            location.reload();
+            this.clearReef();
         });
 
         // Download button (save reef state)
@@ -244,6 +244,23 @@ class ReefManager {
         
         // Show feedback
         this.showCelebration('💾');
+    }
+
+    clearReef() {
+        this.creatures = [];
+        this.saveCreatures();
+        this.renderReef();
+        this.updateCounter();
+
+        if (this.isFishCircleMode) {
+            this.isFishCircleMode = false;
+            const circleBtn = document.getElementById('circle-fish-btn');
+            circleBtn.textContent = '🐠 Nedar';
+            circleBtn.classList.remove('active-circling');
+            this.stopFishCircleAnimation();
+        }
+
+        this.showCelebration('🧹');
     }
 
     toggleFishCircleMode() {
