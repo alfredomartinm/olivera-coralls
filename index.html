@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30">
+    <title>Olivera Corals - Our Underwater Reef 🌊</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ocean-background">
+        <div class="bubbles"></div>
+        
+        <header>
+            <h1>🌊 Olivera Corals Class Reef 🌊</h1>
+            <p class="subtitle">Click to add creatures to our reef!</p>
+            <div class="counter">
+                <span id="creature-count">0</span> creatures in our reef!
+            </div>
+        </header>
+
+        <main>
+            <section class="button-section">
+                <h2>Add a Sea Creature</h2>
+                <div class="creature-buttons">
+                    <button class="creature-btn" data-creature="🐠" data-name="Fish">
+                        <span class="emoji">🐠</span>
+                        <span class="label">Fish</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🐙" data-name="Octopus">
+                        <span class="emoji">🐙</span>
+                        <span class="label">Octopus</span>
+                    </button>
+                    <button class="creature-btn" data-creature="⭐" data-name="Starfish">
+                        <span class="emoji">⭐</span>
+                        <span class="label">Starfish</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🐢" data-name="Turtle">
+                        <span class="emoji">🐢</span>
+                        <span class="label">Turtle</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🦈" data-name="Seahorse">
+                        <span class="emoji">🦈</span>
+                        <span class="label">Seahorse</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🪼" data-name="Jellyfish">
+                        <span class="emoji">🪼</span>
+                        <span class="label">Jellyfish</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🦀" data-name="Crab">
+                        <span class="emoji">🦀</span>
+                        <span class="label">Crab</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🪸" data-name="Coral">
+                        <span class="emoji">🪸</span>
+                        <span class="label">Coral</span>
+                    </button>
+                    <button class="creature-btn" data-creature="🐚" data-name="Shell">
+                        <span class="emoji">🐚</span>
+                        <span class="label">Shell</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="reef-display">
+                <h2>Our Amazing Reef</h2>
+                <div id="reef-area" class="reef-area">
+                    <!-- Creatures will appear here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <button id="refresh-btn" class="action-btn">🔄 Refresh Reef</button>
+            <button id="download-btn" class="action-btn">💾 Save Our Reef</button>
+            <p class="footer-text">Made with ❤️ by Olivera Corals Class</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
