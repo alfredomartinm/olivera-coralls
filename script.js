@@ -7,6 +7,7 @@ class ReefManager {
         this.isFishCircleMode = false;
         this.fishCircleAnimationId = null;
         this.fishCircleStartTime = null;
+        this.fishOrbitData = new Map();
         this.init();
     }
 
@@ -143,6 +144,7 @@ class ReefManager {
             creatureEl.className = 'reef-creature';
             creatureEl.textContent = creature.emoji;
             creatureEl.dataset.creature = creature.emoji;
+            creatureEl.dataset.id = String(creature.id);
             creatureEl.title = `${creature.name} - Added ${new Date(creature.timestamp).toLocaleString()}`;
             
             // Stagger the animation
@@ -242,13 +244,13 @@ class ReefManager {
 
         const circleBtn = document.getElementById('circle-fish-btn');
         if (this.isFishCircleMode) {
-            circleBtn.textContent = '⏹️ Aturar Cercles dels Peixos';
+            circleBtn.textContent = '⏹️ Parar de Nedar';
             circleBtn.classList.add('active-circling');
             this.startFishCircleAnimation();
             return;
         }
 
-        circleBtn.textContent = '🌀 Fer Nedar els Peixos en Cercles';
+        circleBtn.textContent = '🐠 Nedar';
         circleBtn.classList.remove('active-circling');
         this.stopFishCircleAnimation();
     }
@@ -256,6 +258,7 @@ class ReefManager {
     startFishCircleAnimation() {
         this.stopFishCircleAnimation();
         this.fishCircleStartTime = null;
+        this.fishOrbitData.clear();
         this.fishCircleAnimationId = requestAnimationFrame((timestamp) => this.animateFishInCircles(timestamp));
     }
 
@@ -273,6 +276,8 @@ class ReefManager {
             fishEl.style.transform = '';
             fishEl.style.animationDelay = '';
         });
+
+        this.fishOrbitData.clear();
     }
 
     animateFishInCircles(timestamp) {
@@ -288,24 +293,42 @@ class ReefManager {
         }
 
         const elapsed = (timestamp - this.fishCircleStartTime) / 1000;
-        const centerX = reefArea.clientWidth / 2;
-        const centerY = reefArea.clientHeight / 2;
-        const minDimension = Math.min(reefArea.clientWidth, reefArea.clientHeight);
-        const baseRadius = Math.max(40, minDimension * 0.28);
-        const angularSpeed = 1.1;
+        const maxX = reefArea.clientWidth;
+        const maxY = reefArea.clientHeight;
 
-        fishElements.forEach((fishEl, index) => {
-            const count = Math.max(1, fishElements.length);
-            const angleOffset = (index / count) * Math.PI * 2;
-            const radiusOffset = (index % 3) * 22;
-            const radius = Math.min(baseRadius + radiusOffset, minDimension * 0.4);
-            const angle = elapsed * angularSpeed + angleOffset;
-            const x = centerX + Math.cos(angle) * radius;
-            const y = centerY + Math.sin(angle) * radius;
+        fishElements.forEach((fishEl) => {
+            const fishId = fishEl.dataset.id || `fish-${Math.random()}`;
+            if (!this.fishOrbitData.has(fishId)) {
+                const safePadding = 50;
+                const centerX = safePadding + Math.random() * Math.max(1, maxX - safePadding * 2);
+                const centerY = safePadding + Math.random() * Math.max(1, maxY - safePadding * 2);
+                const radius = 12 + Math.random() * 30;
+                const angularSpeed = 0.7 + Math.random() * 1.2;
+                const phase = Math.random() * Math.PI * 2;
+                const wobble = 3 + Math.random() * 8;
+
+                this.fishOrbitData.set(fishId, {
+                    centerX,
+                    centerY,
+                    radius,
+                    angularSpeed,
+                    phase,
+                    wobble
+                });
+            }
+
+            const orbit = this.fishOrbitData.get(fishId);
+            const angle = elapsed * orbit.angularSpeed + orbit.phase;
+            const wobble = Math.sin(elapsed * 2 + orbit.phase) * orbit.wobble;
+            const x = orbit.centerX + Math.cos(angle) * (orbit.radius + wobble);
+            const y = orbit.centerY + Math.sin(angle) * orbit.radius;
+
+            const clampedX = Math.min(Math.max(24, x), Math.max(24, maxX - 24));
+            const clampedY = Math.min(Math.max(24, y), Math.max(24, maxY - 24));
 
             fishEl.classList.add('fish-circling');
-            fishEl.style.left = `${x}px`;
-            fishEl.style.top = `${y}px`;
+            fishEl.style.left = `${clampedX}px`;
+            fishEl.style.top = `${clampedY}px`;
             fishEl.style.transform = 'translate(-50%, -50%)';
         });
 
