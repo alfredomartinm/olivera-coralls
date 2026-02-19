@@ -140,7 +140,7 @@ class ReefManager {
         const reefArea = document.getElementById('reef-area');
         
         if (this.creatures.length === 0) {
-            reefArea.innerHTML = '<p style="text-align: center; color: #003d7a; font-size: 1.5em;">Your reef is empty! Click a button to add creatures! 🌊</p>';
+            reefArea.innerHTML = '<p style="text-align: center; color: #003d7a; font-size: 1.5em;">El teu escull està buit! Fes clic a un botó per afegir criatures! 🌊</p>';
             return;
         }
         
