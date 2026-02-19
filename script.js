@@ -52,6 +52,13 @@ class ReefManager {
         document.getElementById('circle-fish-btn').addEventListener('click', () => {
             this.toggleFishCircleMode();
         });
+
+        // Recalculate swim paths when screen size changes (important on mobile rotation)
+        window.addEventListener('resize', () => {
+            if (this.isFishCircleMode) {
+                this.fishOrbitData.clear();
+            }
+        });
     }
 
     addCreature(emoji, name) {
@@ -295,17 +302,25 @@ class ReefManager {
         const elapsed = (timestamp - this.fishCircleStartTime) / 1000;
         const maxX = reefArea.clientWidth;
         const maxY = reefArea.clientHeight;
+        const minDimension = Math.min(maxX, maxY);
+
+        if (maxX === 0 || maxY === 0) {
+            this.fishCircleAnimationId = requestAnimationFrame((nextTimestamp) => this.animateFishInCircles(nextTimestamp));
+            return;
+        }
 
         fishElements.forEach((fishEl) => {
             const fishId = fishEl.dataset.id || `fish-${Math.random()}`;
             if (!this.fishOrbitData.has(fishId)) {
-                const safePadding = 50;
+                const safePadding = Math.max(18, Math.min(40, minDimension * 0.12));
                 const centerX = safePadding + Math.random() * Math.max(1, maxX - safePadding * 2);
                 const centerY = safePadding + Math.random() * Math.max(1, maxY - safePadding * 2);
-                const radius = 12 + Math.random() * 30;
-                const angularSpeed = 0.7 + Math.random() * 1.2;
+                const radius = Math.max(10, minDimension * (0.05 + Math.random() * 0.09));
+                const angularSpeed = 1.1 + Math.random() * 1.3;
                 const phase = Math.random() * Math.PI * 2;
-                const wobble = 3 + Math.random() * 8;
+                const wobble = 4 + Math.random() * 10;
+                const driftSpeed = 0.12 + Math.random() * 0.25;
+                const driftPhase = Math.random() * Math.PI * 2;
 
                 this.fishOrbitData.set(fishId, {
                     centerX,
@@ -313,15 +328,19 @@ class ReefManager {
                     radius,
                     angularSpeed,
                     phase,
-                    wobble
+                    wobble,
+                    driftSpeed,
+                    driftPhase
                 });
             }
 
             const orbit = this.fishOrbitData.get(fishId);
             const angle = elapsed * orbit.angularSpeed + orbit.phase;
             const wobble = Math.sin(elapsed * 2 + orbit.phase) * orbit.wobble;
-            const x = orbit.centerX + Math.cos(angle) * (orbit.radius + wobble);
-            const y = orbit.centerY + Math.sin(angle) * orbit.radius;
+            const driftX = Math.cos(elapsed * orbit.driftSpeed + orbit.driftPhase) * 8;
+            const driftY = Math.sin(elapsed * orbit.driftSpeed + orbit.driftPhase) * 8;
+            const x = orbit.centerX + driftX + Math.cos(angle) * (orbit.radius + wobble);
+            const y = orbit.centerY + driftY + Math.sin(angle) * orbit.radius;
 
             const clampedX = Math.min(Math.max(24, x), Math.max(24, maxX - 24));
             const clampedY = Math.min(Math.max(24, y), Math.max(24, maxY - 24));
